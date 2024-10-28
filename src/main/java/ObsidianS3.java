@@ -1,3 +1,4 @@
+import org.springframework.jdbc.core.JdbcTemplate;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
@@ -6,62 +7,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 public class ObsidianS3 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         S3Client s3Client = new S3Provider().getS3Client();
-        String bucketName = "obsidian-dados";
-
-        try {
-            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                    .bucket(bucketName)
-                    .build();
-            s3Client.createBucket(createBucketRequest);
-            System.out.println("Bucket criado com sucesso: " + bucketName);
-        } catch (S3Exception e) {
-            System.err.println("Erro ao criar o bucket: " + e.getMessage());
-        }
-
-        try {
-            List<Bucket> buckets = s3Client.listBuckets().buckets();
-            System.out.println("Lista de buckets:");
-            for (Bucket bucket : buckets) {
-                System.out.println("- " + bucket.name());
-            }
-        } catch (S3Exception e) {
-            System.err.println("Erro ao listar buckets: " + e.getMessage());
-        }
-
-        try {
-            ListObjectsRequest listObjects = ListObjectsRequest.builder()
-                    .bucket(bucketName)
-                    .build();
-
-            List<S3Object> objects = s3Client.listObjects(listObjects).contents();
-            System.out.println("Objetos no bucket " + bucketName + ":");
-            for (S3Object object : objects) {
-                System.out.println("- " + object.key());
-            }
-        } catch (S3Exception e) {
-            System.err.println("Erro ao listar objetos no bucket: " + e.getMessage());
-        }
-
-//        try {
-//            String uniqueFileName = UUID.randomUUID().toString();
-//            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-//                    .bucket(bucketName)
-//                    .key(uniqueFileName)
-//                    .build();
-//
-//            File file = new File("SEEG11.1-DADOS-NACIONAIS.txt");
-//            s3Client.putObject(putObjectRequest, RequestBody.fromFile(file));
-//
-//            System.out.println("Arquivo '" + file.getName() + "' enviado com sucesso com o nome: " + uniqueFileName);
-//        } catch (S3Exception e) {
-//            System.err.println("Erro ao fazer upload do arquivo: " + e.getMessage());
-//        }
+        String bucketName = "s3obsidian";
 
         try {
             List<S3Object> objects = s3Client.listObjects(ListObjectsRequest.builder().bucket(bucketName).build()).contents();
@@ -79,13 +32,38 @@ public class ObsidianS3 {
             System.err.println("Erro ao fazer download dos arquivos: " + e.getMessage());
         }
 
-//        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-//                .bucket("nome-do-bucket")
-//                .key("identificador-do-objeto")
-//                .build();
-//
-//        s3Client.deleteObject(deleteObjectRequest);
-//        System.out.println("Objeto deletado: " + "identificador-do-objeto");
+        DBConnectionProvider dbConnectionProvider = new DBConnectionProvider();
+        JdbcTemplate connection = dbConnectionProvider.getConnection();
+
+        String nomeArquivo = "SEEG.xlsx";
+
+        // Carregando o arquivo excel
+        Path caminho = Path.of(nomeArquivo);
+        InputStream arquivo = Files.newInputStream(caminho);
+
+        // Extraindo os livros do arquivo
+        LeitorExcel leitorExcel = new LeitorExcel();
+        List<Emissao> emissoesExtraidas = leitorExcel.extrairEmissoes(nomeArquivo, arquivo);
+        for (Emissao emissaoExtraida : emissoesExtraidas) {
+            if (emissaoExtraida.getGas().contains("CO2e")){
+                connection.update("INSERT INTO carbonFootprint (gas, setorEmissao, estado, doisMilDoze, doisMilTreze, doisMilQuatorze, doisMilQuinze, " +
+                                "doisMilDezesseis, doisMilDezessete, doisMilDezoito, doisMilDezenove, doisMilVinte, doisMilVinteUm, doisMilVinteDois) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        emissaoExtraida.getGas(), emissaoExtraida.getSetorEmissao(), emissaoExtraida.getEstado(),
+                        emissaoExtraida.getDoisMilDoze(), emissaoExtraida.getDoisMilTreze(), emissaoExtraida.getDoisMilQuatorze(),
+                        emissaoExtraida.getDoisMilQuinze(), emissaoExtraida.getDoisMilDezesseis(), emissaoExtraida.getDoisMilDezessete(),
+                        emissaoExtraida.getDoisMilDezoito(), emissaoExtraida.getDoisMilDezenove(), emissaoExtraida.getDoisMilVinte(),
+                        emissaoExtraida.getDoisMilVinteUm(), emissaoExtraida.getDoisMilVinteDois());
+            }
+        }
+
+        // Fechando o arquivo após a extração
+        arquivo.close();
+
+        System.out.println("Dados extraídos:");
+        for (Emissao emissao : emissoesExtraidas) {
+            System.out.println(emissao);
+        }
     }
 }
 
