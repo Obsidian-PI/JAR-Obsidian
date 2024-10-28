@@ -86,7 +86,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>logData</mainClass>
+                            <mainClass>ObsidianS3</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
