@@ -12,7 +12,7 @@ public class DBConnectionProvider {
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl("jdbc:mysql://localhost:3306/obsidian");
         basicDataSource.setUsername("root");
-        basicDataSource.setPassword("");
+        basicDataSource.setPassword("mgtu6965");
 
         this.dataSource = basicDataSource;
     }

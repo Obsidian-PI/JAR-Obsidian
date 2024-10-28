@@ -77,4 +77,7 @@ public class LeitorExcel {
             throw new RuntimeException(e);
         }
     }
+    private LocalDate converterDate(Date data) {
+        return data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
 }

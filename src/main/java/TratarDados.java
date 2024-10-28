@@ -20,17 +20,16 @@ public class TratarDados {
         // Extraindo os livros do arquivo
         LeitorExcel leitorExcel = new LeitorExcel();
         List<Emissao> emissoesExtraidas = leitorExcel.extrairEmissoes(nomeArquivo, arquivo);
-        for (Emissao emissoesExtraida : emissoesExtraidas) {
-            if (emissoesExtraida.getGas().contains("CO2e")){
-                connection.update("INSERT INTO carbonFootprint " +
-                                "(gas, setorEmissao, estado, doisMilDoze, doisMilTreze, doisMilQuatorze, doisMilQuinze, " +
+        for (Emissao emissaoExtraida : emissoesExtraidas) {
+            if (emissaoExtraida.getGas().contains("CO2e")){
+                connection.update("INSERT INTO carbonFootprint (gas, setorEmissao, estado, doisMilDoze, doisMilTreze, doisMilQuatorze, doisMilQuinze, " +
                                 "doisMilDezesseis, doisMilDezessete, doisMilDezoito, doisMilDezenove, doisMilVinte, doisMilVinteUm, doisMilVinteDois) " +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        emissoesExtraida.getGas(), emissoesExtraida.getSetorEmissao(), emissoesExtraida.getEstado(),
-                        emissoesExtraida.getDoisMilDoze(), emissoesExtraida.getDoisMilTreze(), emissoesExtraida.getDoisMilQuatorze(),
-                        emissoesExtraida.getDoisMilQuinze(), emissoesExtraida.getDoisMilDezesseis(), emissoesExtraida.getDoisMilDezessete(),
-                        emissoesExtraida.getDoisMilDezoito(), emissoesExtraida.getDoisMilDezenove(), emissoesExtraida.getDoisMilVinte(),
-                        emissoesExtraida.getDoisMilVinteUm(), emissoesExtraida.getDoisMilVinteDois());
+                        emissaoExtraida.getGas(), emissaoExtraida.getSetorEmissao(), emissaoExtraida.getEstado(),
+                        emissaoExtraida.getDoisMilDoze(), emissaoExtraida.getDoisMilTreze(), emissaoExtraida.getDoisMilQuatorze(),
+                        emissaoExtraida.getDoisMilQuinze(), emissaoExtraida.getDoisMilDezesseis(), emissaoExtraida.getDoisMilDezessete(),
+                        emissaoExtraida.getDoisMilDezoito(), emissaoExtraida.getDoisMilDezenove(), emissaoExtraida.getDoisMilVinte(),
+                        emissaoExtraida.getDoisMilVinteUm(), emissaoExtraida.getDoisMilVinteDois());
             }
         }
 
