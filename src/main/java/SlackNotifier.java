@@ -12,16 +12,13 @@ public class SlackNotifier {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            // Montando o payload com a formatação correta
             String payload = "{\"text\":\"" + message + "\"}";
 
-            // Enviando o payload
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = payload.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
 
-            // Verificando a resposta
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 System.out.println("Mensagem enviada com sucesso.");
