@@ -1,7 +1,7 @@
+package configs;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-
 import javax.sql.DataSource;
 
 public class DBConnectionProvider {
@@ -12,7 +12,7 @@ public class DBConnectionProvider {
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl("jdbc:mysql://localhost:3306/obsidian");
         basicDataSource.setUsername("root");
-        basicDataSource.setPassword("urubu100");
+        basicDataSource.setPassword("");
 
         this.dataSource = basicDataSource;
     }

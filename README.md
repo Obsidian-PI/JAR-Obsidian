@@ -33,7 +33,7 @@ AWS_SESSION_TOKEN
 
 ![img](images/adicionarToken.png)
 
-9. Rode o projeto na classe ObsidianS3
+9. Rode o projeto na classe ObsidianMain
 
 ![img](images/img2.png)
 

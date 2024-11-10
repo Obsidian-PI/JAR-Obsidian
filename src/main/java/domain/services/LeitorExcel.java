@@ -1,10 +1,11 @@
+package domain.services;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import domain.entities.Emissao;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -31,18 +32,6 @@ public class LeitorExcel {
 
             // Iterando sobre as linhas da planilha
             for (Row row : sheet) {
-
-                if (row.getRowNum() == 0) {
-                    System.out.println("\nLendo cabeçalho");
-
-                    for (int i = 0; i < 4; i++) {
-                        String coluna = row.getCell(i).getStringCellValue();
-                        System.out.println("Coluna " + i + ": " + coluna);
-                    }
-
-                    System.out.println("--------------------");
-                    continue;
-                }
 
                 // Extraindo valor das células e criando objeto Livro
                 System.out.println("Lendo linha " + row.getRowNum());
