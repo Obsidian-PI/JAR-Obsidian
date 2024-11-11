@@ -151,7 +151,7 @@ public class Emissao {
 
     @Override
     public String toString() {
-        return "Emissões{" +
+        return "Emissoes{" +
                 "gas='" + gas + '\'' +
                 ", setorEmissao='" + setorEmissao + '\'' +
                 ", estado='" + estado + '\'' +

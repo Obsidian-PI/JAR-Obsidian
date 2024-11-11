@@ -5,16 +5,20 @@ import domain.services.LeitorExcel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ObsidianMain {
     private static final Logger log = LoggerFactory.getLogger(ObsidianMain.class);
@@ -79,7 +83,23 @@ public class ObsidianMain {
             System.out.println(emissao);
         }
 
-        
+        FileWriter writer = new FileWriter("dadosEmissoes.csv");
+
+        String collect = logList.stream()
+                .map(emissao -> emissao.toString())
+                .collect(Collectors.joining("\n"));
+
+        System.out.println(collect);
+
+        writer.write(collect);
+        writer.close();
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket("s3obsidian")
+                .key(UUID.randomUUID().toString())
+                .build();
+
+        s3Client.putObject(putObjectRequest, RequestBody.fromFile(new File("dadosEmissoes.csv")));
     }
 }
 
