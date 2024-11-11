@@ -20,4 +20,10 @@ public class DBConnectionProvider {
     public JdbcTemplate getConnection() {
         return new JdbcTemplate(dataSource);
     }
+
+    public void connect() {
+    }
+
+    public void disconnect() {
+    }
 }

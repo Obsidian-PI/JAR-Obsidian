@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import configs.DBConnectionProvider;
 import domain.entities.Emissao;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,6 +14,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class LeitorExcel {
+
+    private DBConnectionProvider dbConnection;
+
+    public LeitorExcel() {
+        this.dbConnection = dbConnection;
+    }
 
     public List<Emissao> extrairEmissoes(String nomeArquivo, InputStream arquivo) {
         try {
@@ -65,5 +72,10 @@ public class LeitorExcel {
             // Caso ocorra algum erro durante a leitura do arquivo uma exceção será lançada
             throw new RuntimeException(e);
         }
+    }
+
+    public void readAndSave() {
+        dbConnection.connect();
+        dbConnection.disconnect();
     }
 }
