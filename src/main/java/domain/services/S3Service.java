@@ -16,9 +16,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class S3Service {
+public class S3Service extends Servicos {
     S3Client s3Client = new S3Provider().getS3Client();
-    String bucketName = "s3obsidian";
+
+    @Override
     public void baixarArquivo() throws IOException {
         try {
             List<S3Object> objects = s3Client.listObjects(ListObjectsRequest.builder().bucket(bucketName).build()).contents();
@@ -37,8 +38,9 @@ public class S3Service {
         }
     }
 
+    @Override
     public void logToCsv(List<Emissao> logList) throws IOException {
-        FileWriter writer = new FileWriter("dadosEmissoes.csv");
+        FileWriter writer = new FileWriter(csvName);
 
         String collect = logList.stream()
                 .map(emissao -> emissao.toString())
@@ -50,12 +52,13 @@ public class S3Service {
         writer.close();
     }
 
+    @Override
     public void uploadCsv(){
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket("s3obsidian")
+                .bucket(bucketName)
                 .key(UUID.randomUUID().toString())
                 .build();
 
-        s3Client.putObject(putObjectRequest, RequestBody.fromFile(new File("dadosEmissoes.csv")));
+        s3Client.putObject(putObjectRequest, RequestBody.fromFile(new File(csvName)));
     }
 }
