@@ -18,7 +18,7 @@ public class ObsidianMain {
         S3Service s3Service = new S3Service();
         s3Service.baixarArquivo();
 
-        String nomeArquivo = "SEEG1.xlsx";
+        String nomeArquivo = "SEEG.xlsx";
 
         Path caminho = Path.of(nomeArquivo);
         InputStream arquivo = Files.newInputStream(caminho);

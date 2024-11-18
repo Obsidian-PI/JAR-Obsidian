@@ -7,10 +7,7 @@ import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.UUID;
@@ -40,23 +37,28 @@ public class S3Service extends Servicos {
 
     @Override
     public void logToCsv(List<Emissao> logList) throws IOException {
-        FileWriter writer = new FileWriter(csvName);
+        try (PrintWriter pw = new PrintWriter(new FileWriter(csvName))) {
 
-        String collect = logList.stream()
-                .map(emissao -> emissao.toString())
-                .collect(Collectors.joining("\n"));
+            pw.println("gas; setor emissao; estado; 2012; 2013; 2014; 2015; 2016; 2017; 2018; 2019; 2020; 2021; 2022");
 
-        System.out.println(collect);
-
-        writer.write(collect);
-        writer.close();
+            for (Emissao emissao : logList) {
+                pw.println(
+                        emissao.getGas() + ";" + emissao.getSetorEmissao() + ";" + emissao.getEstado() + ";"
+                        + emissao.getDoisMilDoze() + ";" + emissao.getDoisMilTreze() + ";"
+                        + emissao.getDoisMilQuinze() + ";" + emissao.getDoisMilDezesseis() + ";"
+                        + emissao.getDoisMilDezessete() + ";" + emissao.getDoisMilDezoito() + ";"
+                        + emissao.getDoisMilDezenove() + ";" + emissao.getDoisMilVinte() + ";"
+                        + emissao.getDoisMilVinteUm() + ";" + emissao.getDoisMilVinteDois()
+                );
+            }
+        }
     }
 
     @Override
     public void uploadCsv(){
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key(UUID.randomUUID().toString())
+                .key(csvName)
                 .build();
 
         s3Client.putObject(putObjectRequest, RequestBody.fromFile(new File(csvName)));
