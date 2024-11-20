@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class Servicos {
-    String bucketName = "s3obsidian";
+    String bucketName = "s3-obsidian";
     String csvName = "dadosEmissoes.csv";
 
     public abstract void baixarArquivo() throws IOException;
