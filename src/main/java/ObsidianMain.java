@@ -15,6 +15,8 @@ public class ObsidianMain {
 
     public static void main(String[] args) throws IOException {
 
+        //Classe Main para implementação de parametros de leitura
+
         S3Service s3Service = new S3Service();
         s3Service.baixarArquivo();
 
