@@ -10,9 +10,7 @@ public abstract class ApiException extends Exception {
         this.status = status;
     }
 
-    public void logException() {
-        System.err.println("Error " + status + ": " + getMessage());
-    }
+    public abstract void logException();
 
     public Error getError() {
         return error;

@@ -7,6 +7,6 @@ public class NotFoundException extends ApiException{
 
     @Override
     public void logException() {
-        super.logException();
+        System.err.println("Status code: " + getStatus() + ": " + getMessage());
     }
 }
