@@ -9,6 +9,8 @@ import java.util.List;
 
 public class DbService {
     public List<Emissao> inserirDados(List<Emissao> emissoesExtraidas){
+        System.out.println("\nInserindo dados no banco...\n");
+
         DBConnectionProvider dbConnectionProvider = new DBConnectionProvider();
         JdbcTemplate connection = dbConnectionProvider.getConnection();
 

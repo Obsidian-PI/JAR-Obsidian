@@ -1,9 +1,9 @@
+import exceptions.BadRequestException;
+import exceptions.NotFoundException;
 import domain.entities.Emissao;
 import domain.services.DbService;
 import domain.services.LeitorExcel;
 import domain.services.S3Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,11 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class ObsidianMain {
-    private static final Logger log = LoggerFactory.getLogger(ObsidianMain.class);
-
-    public static void main(String[] args) throws IOException {
-
-        //Classe Main para implementação de parametros de leitura
+    public static void main(String[] args) throws IOException, BadRequestException, NotFoundException {
 
         S3Service s3Service = new S3Service();
         s3Service.baixarArquivo();
