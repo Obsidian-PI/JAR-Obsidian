@@ -3,11 +3,18 @@ package domain.services;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
 public class SlackNotifier {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/obsidian";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "07266351545";
+
     public static void sendNotification(String message) {
         try {
-            String webhookUrl = "https://hooks.slack.com/services/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";
+            String webhookUrl = "https://hooks.slack.com/services/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";
             URL url = new URL(webhookUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -24,6 +31,8 @@ public class SlackNotifier {
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 System.out.println("Mensagem enviada com sucesso.");
+                saveMessageToDatabase(message);
+
             } else {
                 System.out.println("Erro ao enviar a mensagem. Código de resposta: " + responseCode);
             }
@@ -31,4 +40,29 @@ public class SlackNotifier {
             e.printStackTrace();
         }
     }
+
+    private static void saveMessageToDatabase(String message) {
+        System.out.println("Mensagem recebida para salvar: " + message);
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String sql = "INSERT INTO alerta (descricao) VALUES (?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, message);
+                stmt.executeUpdate();
+                System.out.println("Mensagem salva no banco de dados.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar mensagem no banco de dados:");
+            e.printStackTrace();
+        }
+    }
+
+    public static void testDatabaseConnection() {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            System.out.println("Conexão com o banco de dados bem-sucedida.");
+        } catch (Exception e) {
+            System.out.println("Erro ao conectar ao banco de dados:");
+            e.printStackTrace();
+        }
+    }
+    
 }
