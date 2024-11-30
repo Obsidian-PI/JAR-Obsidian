@@ -13,9 +13,9 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class S3Service {
-    S3Client s3Client = new S3Provider().getS3Client();
-    String bucketName = "s3-obsidian";
-    String csvName = "dadosEmissoes.csv";
+    private final S3Client s3Client = new S3Provider().getS3Client();
+    private final String bucketName = "s3-obsidian";
+    private final String csvName = "dadosEmissoes.csv";
 
     public void baixarArquivo() throws NotFoundException {
         try {

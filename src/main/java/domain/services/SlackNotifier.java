@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 public class SlackNotifier {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/obsidian";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "07266351545";
+    private static final String DB_PASSWORD = "";
 
     public static void sendNotification(String message) {
         try {
