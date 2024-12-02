@@ -1,3 +1,4 @@
+import domain.services.SlackNotifier;
 import exceptions.BadRequestException;
 import exceptions.NotFoundException;
 import domain.entities.Emissao;
@@ -35,6 +36,8 @@ public class ObsidianMain {
         s3Service.logToCsv(dbService.inserirDados(emissoesExtraidas));
 
         s3Service.uploadCsv();
+
+        SlackNotifier.sendNotification("A base de dados foi atualizada!");
     }
 }
 

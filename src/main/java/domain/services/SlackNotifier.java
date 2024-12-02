@@ -14,7 +14,7 @@ public class SlackNotifier {
 
     public static void sendNotification(String message) {
         try {
-            String webhookUrl = "https://hooks.slack.com/services/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";
+            String webhookUrl = "";
             URL url = new URL(webhookUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -64,5 +64,5 @@ public class SlackNotifier {
             e.printStackTrace();
         }
     }
-    
+
 }
